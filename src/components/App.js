@@ -1,23 +1,27 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
 import Gift from './Gift';
+import { max_number } from '../Helper/index'
 import '../App.css';
 
 class  App extends React.Component {
   state = {
     gifts: [],
-
+    edit: true
   }
 
   addGift = () => {
     const { gifts } = this.state;
-    const ids = this.state.gifts.map(gift => gift.id);
-
-    const max_id = ids.length > 0 ? Math.max(...ids) : 0;
-
-    gifts.push({ id: max_id + 1 }); //id of the last object you add
+    
+    gifts.push({ id: max_number( this.state.gifts.map(gift => gift.id))+ 1 }); //id of the last object you add
 
     this.setState({ gifts })
+  }
+
+  removeGift = (id) => {
+    const gifts = this.state.gifts.filter(gift => gift.id !== id);
+
+    this.setState({ gifts });
   }
 
   render() {
@@ -28,7 +32,11 @@ class  App extends React.Component {
          {
            this.state.gifts.map(gift => {
              return (
-               <Gift key={ gift.id } />
+               <Gift 
+               key={ gift.id } 
+               gift={gift}
+               removeGift={this.removeGift}
+               />
              )
            })
          }
